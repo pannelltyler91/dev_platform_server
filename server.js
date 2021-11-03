@@ -1,10 +1,27 @@
-
+require('dotenv').config();
 const express = require('express')
 const bcrypt = require('bcrypt')
 const cors = require('cors')
 const app = express();
 const port = process.env.PORT || 3001
 const db = require('./models')
+const jwt = require('jsonwebtoken')
+
+const authenticateToken = (req,res,next) =>{
+ const authHeader = req.headers['authorization']
+ const token = authHeader && authHeader.split('')[1]
+ if(token == null){
+   return res.status(401)
+ }else{
+   jwt.verify(token,process.env.ACCESS_TOKEN_SECRET,(err,user))
+ }  if(err){
+   res.status(403)
+ }else{
+  req.user = user
+  next()
+ }
+
+}
 app.use(cors());
 app.use(express.json())
 app.use(
@@ -31,12 +48,34 @@ app.use(
           email:req.body.email,
           password:hash
         })
-        res.json({message:'successfully create!',created:true})
+        res.status(201).json({message:'successfully create!',created:true})
       }else{
         res.status(409).json({message:'User already exists',created:false})
       }
     })
     
+  })
+
+  app.post('/api/login',(req,res) =>{
+    db.users.findAll({
+      where:{
+        email:req.body.email
+      }
+    }).then((users) => {
+      console.log(users);
+      if(users.length == 0){
+        res.status(404).json({message:'User not found', loggedIn:false})
+      }else{
+        let user = users[0]
+        if(bcrypt.compareSync(req.body.password,user.password)){
+          const accessToken = jwt.sign({user},process.env.ACCESS_TOKEN_SECRET,{expiresIn:60*60})
+          res.status(200).json({message:'Login was successful',loggedIn:true,accessToken:accessToken})
+        }else{
+          res.status(409).json({message:'Password does not match', loggedIn:false})
+        }
+      }
+      
+    })
   })
 
   app.post('/api/create/profile/:username',(req,res) =>{
