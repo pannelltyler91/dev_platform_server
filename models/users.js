@@ -1,4 +1,5 @@
 'use strict';
+const Sequelize = require('sequelize');
 const {
   Model
 } = require('sequelize');
@@ -20,8 +21,8 @@ module.exports = (sequelize, DataTypes) => {
     github: DataTypes.STRING,
     linkedin: DataTypes.STRING,
     portfolio: DataTypes.STRING,
-    currentLanguages: DataTypes.ARRAY,
-    newLanguages: DataTypes.ARRAY
+    currentLanguages: DataTypes.ARRAY(Sequelize.TEXT),
+    newLanguages: DataTypes.ARRAY(Sequelize.TEXT)
   }, {
     sequelize,
     modelName: 'users',
