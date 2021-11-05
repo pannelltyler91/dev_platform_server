@@ -7,6 +7,7 @@ const port = process.env.PORT || 3001
 const db = require('./models')
 const jwt = require('jsonwebtoken')
 
+
 const authenticateToken = (req,res,next) =>{
  const authHeader = req.headers['authorization']
  const token = authHeader && authHeader.split('')[1]
