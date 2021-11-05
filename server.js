@@ -34,7 +34,7 @@ app.use(
     res.send('I love coding!')
   })
 
-  app.post('/api/signup', (req,res) =>{
+  app.post('/user/signup', (req,res) =>{
     console.log(req.body);
     db.users.findAll({
       where:{
@@ -56,7 +56,7 @@ app.use(
     
   })
 
-  app.post('/api/login',(req,res) =>{
+  app.post('/user/login',(req,res) =>{
     db.users.findAll({
       where:{
         email:req.body.email
@@ -78,10 +78,31 @@ app.use(
     })
   })
 
-  app.post('/api/create/profile/:username',(req,res) =>{
-    res.send('working')
+  app.put('/user/:username/profile/create',(req,res) =>{
+    console.log(req.body)
+    console.log(req.params.username)
+    db.users.update({github:req.body.github,linkedin:req.body.linkedin,portfolio:req.body.portfolio,currentLanguages:req.body.knownLanguages,newLanguages:req.body.toLearn,pic:req.body.profilePic},{
+      where:{
+        username:req.params.username
+      }
+    })
+    res.json({update:true})
   })
   
+  app.get('/user/:username', (req,res) =>{
+    db.users.findAll({
+      where:{
+        username:req.params.username
+      }
+    }).then((users) =>{
+      for(let i=0;i<users.length;i++){
+        users[i].password = undefined
+        let user = users[0]
+        res.json({user:user})
+      }
+  
+    })
+  })
 
 
 
