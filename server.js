@@ -59,7 +59,7 @@ app.use(
   app.post('/user/login',(req,res) =>{
     db.users.findAll({
       where:{
-        email:req.body.email
+        username:req.body.username
       }
     }).then((users) => {
       console.log(users);

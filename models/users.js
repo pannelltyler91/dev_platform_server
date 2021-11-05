@@ -22,7 +22,8 @@ module.exports = (sequelize, DataTypes) => {
     linkedin: DataTypes.STRING,
     portfolio: DataTypes.STRING,
     currentLanguages: DataTypes.ARRAY(Sequelize.TEXT),
-    newLanguages: DataTypes.ARRAY(Sequelize.TEXT)
+    newLanguages: DataTypes.ARRAY(Sequelize.TEXT),
+    pic:DataTypes.STRING
   }, {
     sequelize,
     modelName: 'users',
