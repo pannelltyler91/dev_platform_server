@@ -23,7 +23,8 @@ module.exports = (sequelize, DataTypes) => {
     portfolio: DataTypes.STRING,
     currentLanguages: DataTypes.ARRAY(Sequelize.TEXT),
     newLanguages: DataTypes.ARRAY(Sequelize.TEXT),
-    pic:DataTypes.STRING
+    pic:DataTypes.STRING,
+    banner:DataTypes.STRING
   }, {
     sequelize,
     modelName: 'users',
