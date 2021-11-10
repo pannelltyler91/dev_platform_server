@@ -148,12 +148,15 @@ app.get("/user/:username", (req, res) => {
     });
 });
 app.get("/user/:username/users/feed", (req, res) => {
+  //finds current user to cross-reference languages
   db.users
     .findAll({
       where: {
         username: req.params.username,
       },
     })
+
+    //searches users and compares current user currentLanguages for potential matches newLanguages and vice versa
     .then((users) => {
       let user = users[0];
       console.log(user);
@@ -168,12 +171,17 @@ app.get("/user/:username/users/feed", (req, res) => {
             },
           },
         })
+        //filters matched users so that current user is not included in results
         .then((matchedUsers) => {
           console.log(matchedUsers);
-          res.json({ matchedUsers: matchedUsers });
+          let newMatchedUsers = matchedUsers.filter(
+            (user) => user.username !== req.params.username
+          );
+          res.json({ matchedUsers: newMatchedUsers });
         });
     });
 });
+
 
 app.listen(port, () => {
   console.log(`Listening on port: ${port}`);
