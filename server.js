@@ -36,7 +36,7 @@ app.get("/api", (req, res) => {
   res.send("I love coding!");
 });
 
-app.post("/user/signup", (req, res) => {
+app.post("/user/signup", async (req, res) => {
   console.log(req.body);
   db.users
     .findAll({
@@ -44,7 +44,7 @@ app.post("/user/signup", (req, res) => {
         username: req.body.username,
       },
     })
-    .then((results) => {
+     .then((results) => {
       let hash = bcrypt.hashSync(req.body.password, 10);
       if (results.length == 0) {
         db.users.create({
