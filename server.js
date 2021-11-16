@@ -9,7 +9,6 @@ const jwt = require("jsonwebtoken");
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 
-
 app.use(cors());
 app.use(express.json());
 app.use(
@@ -22,7 +21,7 @@ app.get("/api", (req, res) => {
   res.send("I love coding!");
 });
 
-app.post("/user/signup", async (req, res) => {
+app.post("/user/signup", (req, res) => {
   console.log(req.body);
   db.users
     .findAll({
@@ -30,7 +29,7 @@ app.post("/user/signup", async (req, res) => {
         username: req.body.username,
       },
     })
-     .then((results) => {
+    .then((results) => {
       let hash = bcrypt.hashSync(req.body.password, 10);
       if (results.length == 0) {
         db.users.create({
@@ -167,7 +166,6 @@ app.get("/user/:username/users/feed", (req, res) => {
         });
     });
 });
-
 
 app.listen(port, () => {
   console.log(`Listening on port: ${port}`);
