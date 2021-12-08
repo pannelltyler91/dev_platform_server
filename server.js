@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const bcrypt = require("bcrypt");
 const cors = require("cors");
+//const fileUpload = require('express-fileupload');
 const app = express();
 const port = process.env.PORT || 3001;
 const db = require("./models");
@@ -17,6 +18,7 @@ app.use(
     extended: true,
   })
 );
+//app.use(fileUpload());
 
 app.get("/api", (req, res) => {
   res.send("I love coding!");
@@ -57,11 +59,11 @@ app.post("/user/login", (req, res) => {
       },
     })
     .then((users) => {
-      console.log(users);
       if (users.length == 0) {
         res.status(404).json({ message: "User not found", loggedIn: false });
       } else {
         let user = users[0];
+        //console.log(user.id);
         if (bcrypt.compareSync(req.body.password, user.password)) {
           const accessToken = jwt.sign(
             { user },
@@ -72,6 +74,7 @@ app.post("/user/login", (req, res) => {
             message: "Login was successful",
             loggedIn: true,
             accessToken: accessToken,
+            userId: user.id
           });
         } else {
           res
@@ -83,17 +86,39 @@ app.post("/user/login", (req, res) => {
 });
 
 app.put("/user/:username/profile/create", (req, res) => {
-  console.log(req.body);
-  console.log(req.params.username);
+  //console.log(req.body);
+  //console.log(req.params.username);
 
-  db.users.update(
+  db.users.findAll({where: {username: req.params.username}})
+  .then(users => {
+    let user = users[0]
+    db.users.update(
+      {
+        github: req.body.github,
+        linkedin: req.body.linkedin,
+        portfolio: req.body.portfolio,
+        currentLanguages: req.body.knownLanguages,
+        newLanguages: req.body.toLearn,
+        pic: req.body.userImg
+      },
+      {
+        where: {
+          username: req.params.username,
+        },
+      }
+    );
+    res.json({ update: true, userId: user.id });
+  })
+
+/*   db.users.update(
     {
       github: req.body.github,
       linkedin: req.body.linkedin,
       portfolio: req.body.portfolio,
       currentLanguages: req.body.knownLanguages,
       newLanguages: req.body.toLearn,
-      pic: req.body.profilePic,
+      pic: req.body.profilePicType || null,
+      pic_name: req.body.profilePicName || null
     },
     {
       where: {
@@ -101,8 +126,9 @@ app.put("/user/:username/profile/create", (req, res) => {
       },
     }
   );
-  res.json({ update: true });
+  res.json({ update: true }); */
 });
+
 
 app.put("/user/:username", (req, res) => {
   console.log(req.body);
@@ -118,6 +144,7 @@ app.put("/user/:username", (req, res) => {
   res.json({ message: "its working" });
 });
 
+
 app.get("/user/:username", (req, res) => {
   db.users
     .findAll({
@@ -129,10 +156,11 @@ app.get("/user/:username", (req, res) => {
       for (let i = 0; i < users.length; i++) {
         users[i].password = undefined;
         let user = users[0];
-        res.json({ user: user });
+        res.json({ user: user, userId: user.id, userImg: user.pic });
       }
     });
 });
+
 app.get("/user/:username/users/feed", (req, res) => {
   //finds current user to cross-reference languages
   db.users
@@ -145,7 +173,7 @@ app.get("/user/:username/users/feed", (req, res) => {
     //searches users and compares current user currentLanguages for potential matches newLanguages and vice versa
     .then((users) => {
       let user = users[0];
-      console.log(user);
+      //console.log(user);
       db.users
         .findAll({
           where: {
@@ -159,11 +187,11 @@ app.get("/user/:username/users/feed", (req, res) => {
         })
         //filters matched users so that current user is not included in results
         .then((matchedUsers) => {
-          console.log(matchedUsers);
+          //console.log(matchedUsers);
           let newMatchedUsers = matchedUsers.filter(
             (user) => user.username !== req.params.username
           );
-          res.json({ matchedUsers: newMatchedUsers });
+          res.json({ matchedUsers: newMatchedUsers, userId: user.id });
         });
     });
 });
