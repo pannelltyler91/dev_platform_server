@@ -81,15 +81,22 @@ router.post("/signup", (req, res) => {
         portfolio: req.body.portfolio,
         currentLanguages: req.body.knownLanguages,
         newLanguages: req.body.toLearn,
-        pic: req.body.profilePic,
+        pic: req.body.userImg,
       },
       {
         where: {
           username: req.params.username,
         },
       }
-    );
-    res.json({ update: true });
+    ) 
+    db.users.findAll({
+      where:{
+        username:req.params.username
+      }
+    }).then((users) =>{
+      let user = users[0]
+      res.json({ update: true, userId:user.id });
+    })
   });
   
   router.put("/:username", (req, res) => {
@@ -117,7 +124,7 @@ router.post("/signup", (req, res) => {
         for (let i = 0; i < users.length; i++) {
           users[i].password = undefined;
           let user = users[0];
-          res.json({ user: user });
+          res.json({ user: user, pic:user.pic });
         }
       });
   });
