@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 
 const cors = require("cors");
+//const fileUpload = require('express-fileupload');
 const app = express();
 const port = process.env.PORT || 3001;
 
@@ -19,11 +20,13 @@ app.use(
     extended: true,
   })
 );
+//app.use(fileUpload());
 
 
 app.get("/api", (req, res) => {
   res.send("I love coding!");
 });
+
 
 
 
