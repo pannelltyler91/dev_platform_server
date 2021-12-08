@@ -124,7 +124,9 @@ router.post("/signup", (req, res) => {
         for (let i = 0; i < users.length; i++) {
           users[i].password = undefined;
           let user = users[0];
-          res.json({ user: user, pic:user.pic });
+
+          res.json({ user:user, pic:user.pic });
+
         }
       });
   });
