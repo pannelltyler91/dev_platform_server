@@ -60,6 +60,7 @@ router.post("/signup", (req, res) => {
               message: "Login was successful",
               loggedIn: true,
               accessToken: accessToken,
+              userId:user.id
             });
           } else {
             res
@@ -125,7 +126,7 @@ router.post("/signup", (req, res) => {
           users[i].password = undefined;
           let user = users[0];
 
-          res.json({ user:user, pic:user.pic });
+          res.json({ user:user, pic:user.pic,userId:user.id });
 
         }
       });
@@ -160,7 +161,7 @@ router.post("/signup", (req, res) => {
             let newMatchedUsers = matchedUsers.filter(
               (user) => user.username !== req.params.username
             );
-            res.json({ matchedUsers: newMatchedUsers });
+            res.json({ matchedUsers: newMatchedUsers,userId:user.id });
           });
       });
   });
