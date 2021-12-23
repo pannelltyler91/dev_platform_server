@@ -8,9 +8,11 @@ const port = process.env.PORT || 3001;
 
 const userRoutes = require("./routes/user");
 const chatRoutes = require('./routes/chats')
+const messageRoutes = require('./routes/messages')
 
 app.use("/user", userRoutes);
 app.use("/chat", chatRoutes)
+app.use("/message", messageRoutes)
 
 app.use(cors());
 app.use(express.json());
