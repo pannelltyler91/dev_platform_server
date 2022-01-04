@@ -44,8 +44,17 @@ router.get('/:user1/:user2', (req,res) =>{
     if(chats.length > 0){
       let chat = chats[0]
       console.log(chat.id)
+      res.status(200).json({chatId:chat.id, newChat:false})
 
       //still need to create messages table with foreign keys, find messages and send back to front
+    } else{ 
+      db.chats.create({
+        user1:req.params.user1,
+        user2:req.params.user2
+      })
+      .then((results)=>{ 
+        console.log(results)
+      })
     }
   })
 
