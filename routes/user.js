@@ -6,9 +6,16 @@ const Op = Sequelize.Op;
 const bcrypt = require("bcrypt");
 const router = express.Router()
 const cors = require("cors");
+//const shortUrl = require('node-url-shortener');
 
 router.use(cors());
 router.use(express.json());
+
+
+/* shortUrl.short('https://www.google.com/search?q=how+to+shorten+url+in+node+js&biw=1067&bih=765&sxsrf=AOaemvIxiG411NLgvig-VK-u9U7hgXyhAQ%3A1641082435237&ei=Q-7QYc-CDvfF0PEPyfGg-AM&ved=0ahUKEwiPsOW85JH1AhX3IjQIHck4CD8Q4dUDCA8&uact=5&oq=how+to+shorten+url+in+node+js&gs_lcp=Cgdnd3Mtd2l6EAMyBQgAEIAEMggIABCGAxCLAzIICAAQhgMQiwMyCAgAEIYDEIsDMggIABCGAxCLAzoHCAAQRxCwA0oECEEYAEoECEYYAFCiBFiiBGCVCWgCcAJ4AIABuwOIAbsDkgEDNC0xmAEAoAEByAEIuAEBwAEB&sclient=gws-wiz', function(err, url) {
+    console.log(url);
+}); */
+
 
 router.post("/signup", (req, res) => {
     console.log(req.body);
@@ -71,9 +78,10 @@ router.post("/signup", (req, res) => {
       });
   });
   
+
   router.put("/:username/profile/create", (req, res) => {
-    console.log(req.body);
-    console.log(req.params.username);
+    //console.log(req.body);
+    //console.log(req.params.username);
   
     db.users.update(
       {
@@ -94,12 +102,14 @@ router.post("/signup", (req, res) => {
       where:{
         username:req.params.username
       }
-    }).then((users) =>{
+    }).then((users) => {
       let user = users[0]
       res.json({ update: true, userId:user.id });
     })
   });
   
+
+
   router.put("/:username", (req, res) => {
     console.log(req.body);
     console.log(req.params.username);
@@ -114,6 +124,7 @@ router.post("/signup", (req, res) => {
     res.json({ message: "its working" });
   });
   
+
   router.get("/:username", (req, res) => {
     db.users
       .findAll({
@@ -126,11 +137,13 @@ router.post("/signup", (req, res) => {
           users[i].password = undefined;
           let user = users[0];
 
-          res.json({ user:user, pic:user.pic,userId:user.id });
+          res.json({ user:user, pic:user.pic, userId:user.id });
 
         }
       });
   });
+
+
   router.get("/:username/users/feed", (req, res) => {
     //finds current user to cross-reference languages
     db.users

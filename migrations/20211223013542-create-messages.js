@@ -15,20 +15,10 @@ module.exports = {
         type: Sequelize.STRING
       },
       user_id:{
-        type:Sequelize.INTEGER,
-        references:{
-          model:'users',
-          key:'id'
-        }
-
+        type:Sequelize.INTEGER
       },
       chat_id:{
-        type:Sequelize.INTEGER,
-        references:{
-          model:'chats',
-          key:'id'
-        }
-
+        type:Sequelize.INTEGER
       },
       
       createdAt: {
