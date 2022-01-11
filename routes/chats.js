@@ -57,6 +57,22 @@ router.get('/:user1/:user2', (req,res) =>{
       })
     }
   })
-
 })
+
+router.get('/:id', (req,res) =>{
+  console.log(req.params.id)
+  db.chats.findAll({
+    where:{
+      user1:req.params.id
+    }
+  }).then((chats) =>{
+    if(chats.length == 0){
+      res.json({message:'your inbox is empty', exisingChats:false})
+    }else{
+      res.json({existingChats:true,chats:chats})
+    }
+  })
+  
+})
+
 module.exports = router;
