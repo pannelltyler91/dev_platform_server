@@ -6,7 +6,7 @@ const db = require("../models");
 router.use(cors());
 router.use(express.json());
 
-router.post("/create", (req, res) => {
+router.post("/create/:user2_name", (req, res) => {
   
   db.chats
     .findAll({
@@ -20,6 +20,7 @@ router.post("/create", (req, res) => {
         db.chats.create({
           user1: req.body.currentUserId,
           user2: req.body.otherUserId,
+          user2_name: req.params.user2_name
         });
         res
           .status(201)
@@ -67,7 +68,7 @@ router.get('/:id', (req,res) =>{
     }
   }).then((chats) =>{
     if(chats.length == 0){
-      res.json({message:'your inbox is empty', exisingChats:false})
+      res.json({message:'your inbox is empty', existingChats:false})
     }else{
       res.json({existingChats:true,chats:chats})
     }
